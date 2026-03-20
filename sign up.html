@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - My Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+        }
+
+        .signup-container {
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 12px;
+            width: 350px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .signup-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input:focus {
+            border-color: #6a11cb;
+            box-shadow: 0 0 5px rgba(106,17,203,0.5);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #6a11cb;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #2575fc;
+        }
+
+        .signin-link {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .signin-link a {
+            color: #6a11cb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .signin-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-msg {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h2>Sign Up</h2>
+        <div class="error-msg" id="errorMsg">Please fill all fields!</div>
+        <form id="signupForm">
+            <div class="input-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" placeholder="Enter your name">
+            </div>
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter your email">
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password">
+            </div>
+            <div class="input-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" placeholder="Confirm your password">
+            </div>
+            <button type="submit" class="btn"><a href="file:///C:/Users/Aditya/OneDrive/Desktop/webtask/Portfolio/index.html">Sign Up</a></button>
+        </form>
+        <div class="signin-link">
+            Already have an account? <a href="file:///C:/Users/Aditya/OneDrive/Desktop/webtask/sign%20in/index.html">Sign In</a>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('signupForm');
+        const errorMsg = document.getElementById('errorMsg');
+
+        form.addEventListener('submit', function(e){
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+            if(name === "" || email === "" || password === "" || confirmPassword === "") {
+                errorMsg.textContent = "Please fill all fields!";
+                errorMsg.style.display = "block";
+            } else if(password !== confirmPassword) {
+                errorMsg.textContent = "Passwords do not match!";
+                errorMsg.style.display = "block";
+            } else {
+                errorMsg.style.display = "none";
+                alert("Account Created Successfully!\n(This is just a demo)");
+                // Aap yaha user ko sign in page ya dashboard me redirect kar sakte ho
+                // window.location.href = "signin.html";
+            }
+        });
+    </script>
+</body>
+</html>
