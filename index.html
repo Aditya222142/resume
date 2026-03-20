@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Responsive Portfolio</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    .navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 8%;
+  background: #0a3d62;
+  color: white;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* Menu */
+.menu {
+  list-style: none;
+  display: flex;
+}
+
+.menu li {
+  margin: 0 15px;
+}
+
+.menu a {
+  color: white;
+  text-decoration: none;
+  position: relative;
+  transition: 0.3s;
+}
+
+/* Underline animation */
+.menu a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  background: red;
+  left: 0;
+  bottom: -5px;
+  transition: 0.3s;
+}
+
+.menu a:hover::after {
+  width: 100%;
+}
+
+/* Buttons */
+.auth-buttons a {
+  margin-left: 10px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* Sign In */
+.signin {
+  color: white;
+  border: 1px solid white;
+}
+
+.signin:hover {
+  background: white;
+  color: black;
+}
+
+/* Sign Up */
+.signup {
+  background: red;
+  color: white;
+}
+
+.signup:hover {
+  background: darkred;
+}
+
+/* Header adjust */
+header {
+  margin-top: 70px;
+}
+
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+  background:#0f172a;
+  color:white;
+  scroll-behavior:smooth;
+}
+
+header{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  text-align:center;
+  padding:20px;
+}
+
+header img{
+  width:220px;
+  border-radius:50%;
+  border:4px solid #38bdf8;
+  animation: float 3s infinite ease-in-out;
+}
+
+@keyframes float{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+  100%{transform:translateY(0)}
+}
+
+h1{
+  font-size:clamp(28px,5vw,42px);
+  color:#38bdf8;
+  margin-top:15px;
+}
+
+p{opacity:0.8;margin-top:10px;font-size:clamp(14px,2.5vw,18px);}
+
+.btn{
+  margin-top:20px;
+  padding:12px 25px;
+  background:#38bdf8;
+  color:black;
+  border-radius:6px;
+  text-decoration:none;
+  transition:0.3s;
+  display:inline-block;
+}
+
+.btn:hover{
+  transform:scale(1.1);
+  background:#0ea5e9;
+}
+
+section{padding:60px 8%;}
+
+h2{
+  text-align:center;
+  margin-bottom:40px;
+  color:#38bdf8;
+  font-size:clamp(22px,4vw,30px);
+}
+
+.about{
+  max-width:700px;
+  margin:auto;
+  text-align:center;
+}
+hr {
+  border: none;
+  height: 2px;
+ 
+  background: #794848;
+  margin: 20px 0;
+}
+
+.projects{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:#1e293b;
+  border-radius:15px;
+  overflow:hidden;
+  transition:0.4s;
+}
+
+.card:hover{
+  transform:translateY(-10px) scale(1.02);
+  box-shadow:0 15px 30px rgba(0,0,0,0.6);
+}
+
+.card img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+}
+
+.card-content{
+  padding:15px;
+}
+
+.buttons a{
+  display:inline-block;
+  margin-top:10px;
+  margin-right:5px;
+  padding:8px 14px;
+  border-radius:5px;
+  text-decoration:none;
+  font-size:14px;
+  transition:0.3s;
+}
+
+/* Live Demo Button */
+.live-btn{
+  background:#38bdf8;
+  color:black;
+}
+
+.live-btn:hover{
+  background:red;
+  color:white;
+  transform:scale(1.1);
+}
+
+/* Code Button */
+.code-btn{
+  background:#64748b;
+  color:white;
+}
+
+.code-btn:hover{
+  background:#94a3b8;
+}
+
+.hidden{
+  opacity:0;
+  transform:translateY(40px);
+  transition:all 0.8s ease;
+}
+
+.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+footer {
+  background: #0a3d62;
+  color: white;
+  text-align: center;
+  padding: 30px;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+footer a:hover {
+  color: red;
+}
+</style>
+</head>
+
+<body>
+   <nav class="navbar">
+  <h2 class="Aditya">MyPortfolio</h2>
+
+  <ul class="menu">
+    <li><a href="#">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+     <li><a href="#contact">More</a></li>
+  </ul>
+
+  <div class="auth-buttons">
+    <a href="file:///C:/Users/Aditya/OneDrive/Desktop/webtask/sign%20in/index.html" class="signin">Sign In</a>
+    <a href="file:///C:/Users/Aditya/OneDrive/Desktop/webtask/sign%20up/index.html" class="signup">Sign Up</a>
+  </div>
+</nav>
+<header>
+  <img src="file:///C:/Users/Aditya/OneDrive/Desktop/myportfolio/images/IMG_20250422_154147_578.webp">
+  <h1>Aditya Vishwakarma</h1>
+  <p>Frontend Developer | Student | Aspiring & Building Real Project <br> Web Developer</p>
+  <a href="#projects" class="btn">View My Work</a>
+</header>
+
+<section class="hidden">
+  <h2>About Me</h2>
+  <div class="about">
+    <p>
+I am a web development student who loves building websites. 
+I am learning HTML, CSS, and JavaScript within backend language and creating projects to improve my skills. 
+My goal is to become a professional web developer as well as  hands-on project experience. 
+Focused on improving skills and creating real-world applications.
+</p>
+  </div>
+</section><hr>
+
+<section id="projects" class="hidden">
+  <h2>My Projects</h2>
+
+  <div class="projects">
+
+    <!-- 6 Projects -->
+
+    <div class="card">
+      <img src="images/project1.png">
+      <div class="card-content">
+        <h3>Project 1</h3>
+        <div class="buttons">
+          <a href="file:///C:/Users/Aditya/OneDrive/Desktop/webtask/Naukari/index.html" class="live-btn">Live Demo</a>
+          <a href="#" class="code-btn">Source Code</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="images/project2.png">
+      <div class="card-content">
+        <h3>Project 2</h3>
+        <div class="buttons">
+          <a href="file:///C:/Users/Aditya/OneDrive/Desktop/webtask/index.html" class="live-btn">Live Demo</a>
+          <a href="#" class="code-btn">Source Code</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="images/project3.png">
+      <div class="card-content">
+        <h3>Project 3</h3>
+        <div class="buttons">
+          <a href="#" class="live-btn">Live Demo</a>
+          <a href="#" class="code-btn">Source Code</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="images/project4.png">
+      <div class="card-content">
+        <h3>Project 4</h3>
+        <div class="buttons">
+          <a href="#" class="live-btn">Live Demo</a>
+          <a href="#" class="code-btn">Source Code</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="images/project5.png">
+      <div class="card-content">
+        <h3>Project 5</h3>
+        <div class="buttons">
+          <a href="#" class="live-btn">Live Demo</a>
+          <a href="#" class="code-btn">Source Code</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="images/project6.png">
+      <div class="card-content">
+        <h3>Project 6</h3>
+        <div class="buttons">
+          <a href="#" class="live-btn">Live Demo</a>
+          <a href="#" class="code-btn">Source Code</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+
+  <h3>Aditya Vishwakarma</h3>
+
+  <p>Frontend Developer | Student</p>
+
+  <p>Email : vishwakarmaaditya1096@email.com</p>
+
+  <div>
+    <a href="#">GitHub</a> |
+    <a href="#">whatsapp</a> |
+    <a href="#">LinkedIn</a>
+  </div>
+
+  <p>© 2026 All Rights Reserved</p>
+
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('show');
+    }
+  });
+});
+
+const hiddenElements = document.querySelectorAll('.hidden');
+hiddenElements.forEach(el=>observer.observe(el));
+</script>
+
+</body>
+</html>
