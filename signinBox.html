@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultra Pro Login</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+/* ANIMATED BG */
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background: linear-gradient(-45deg,#ff416c,#ff4b2b,#667eea,#764ba2);
+    background-size:400% 400%;
+    animation:gradient 10s ease infinite;
+}
+
+@keyframes gradient{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+/* GLASS CONTAINER */
+.container{
+    position:relative;
+    width:900px;
+    height:520px;
+    border-radius:15px;
+    overflow:hidden;
+    backdrop-filter: blur(15px);
+    background:rgba(255,255,255,0.1);
+    box-shadow:0 10px 40px rgba(0,0,0,0.3);
+}
+
+/* FORM */
+.form{
+    position:absolute;
+    width:50%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:50px;
+    transition:0.6s ease-in-out;
+    color:white;
+}
+
+.sign-in{left:0; z-index:2;}
+.sign-up{left:0; opacity:0; pointer-events:none;}
+
+.container.active .sign-in{
+    transform:translateX(100%) scale(0.9);
+    opacity:0;
+}
+
+.container.active .sign-up{
+    transform:translateX(100%) scale(1);
+    opacity:1;
+    pointer-events:auto;
+}
+
+/* INPUT FLOATING */
+.input-box{
+    position:relative;
+    margin:12px 0;
+}
+
+.input-box input{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:5px;
+    outline:none;
+}
+
+.input-box label{
+    position:absolute;
+    left:10px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:12px;
+    color:#777;
+    transition:0.3s;
+}
+
+.input-box input:focus + label,
+.input-box input:valid + label{
+    top:-8px;
+    font-size:10px;
+    color:#ff4b2b;
+}
+
+/* SOCIAL */
+.social{
+    margin:10px 0;
+}
+
+.social span{
+    display:inline-flex;
+    justify-content:center;
+    align-items:center;
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    margin:0 5px;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.social span:nth-child(1){background:#1877f2;}
+.social span:nth-child(2){background:#db4437;}
+.social span:nth-child(3){background:#0a66c2;}
+
+.social span:hover{
+    transform:scale(1.2);
+}
+
+/* BUTTON */
+button{
+    padding:10px;
+    border:none;
+    border-radius:25px;
+    background:#ff4b2b;
+    color:white;
+    margin-top:10px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.1);
+    box-shadow:0 0 15px rgba(255,75,43,0.7);
+}
+
+/* LINK */
+a{
+    font-size:12px;
+    margin-top:8px;
+    color:white;
+    text-decoration:none;
+}
+
+/* OVERLAY */
+.overlay{
+    position:absolute;
+    right:0;
+    width:50%;
+    height:100%;
+    background:linear-gradient(135deg,#ff416c,#ff4b2b);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+    color:white;
+    padding:40px;
+    transition:0.6s ease-in-out;
+}
+
+.container.active .overlay{
+    transform:translateX(-100%);
+}
+
+.overlay button{
+    background:transparent;
+    border:1px solid white;
+}
+
+/* TEXT */
+h2{margin-bottom:10px;}
+p{font-size:14px;}
+
+</style>
+</head>
+
+<body>
+
+<div class="container" id="container">
+
+    <!-- SIGN IN -->
+    <div class="form sign-in">
+        <h2>Sign In</h2>
+
+        <div class="social">
+            <span>f</span>
+            <span>G</span>
+            <span>in</span>
+        </div>
+
+        <div class="input-box">
+            <input type="email" required>
+            <label>Email</label>
+        </div>
+
+        <div class="input-box">
+            <input type="password" required>
+            <label>Password</label>
+        </div>
+
+        <a href="#">Forgot password?</a>
+
+        <button id="signInBtn">SIGN IN</button>
+    </div>
+
+    <!-- SIGN UP -->
+    <div class="form sign-up">
+        <h2>Create Account</h2>
+
+        <div class="social">
+            <span>f</span>
+            <span>G</span>
+            <span>in</span>
+        </div>
+
+        <div class="input-box">
+            <input type="text" required>
+            <label>Name</label>
+        </div>
+
+        <div class="input-box">
+            <input type="email" required>
+            <label>Email</label>
+        </div>
+
+        <div class="input-box">
+            <input type="password" required>
+            <label>Password</label>
+        </div>
+
+        <button id="signUpBtn">SIGN UP</button>
+    </div>
+
+    <!-- OVERLAY -->
+    <div class="overlay">
+        <h2 id="title">Hello Friend</h2>
+        <p id="text">Start your journey with us</p>
+        <button id="toggleBtn">SIGN UP</button>
+    </div>
+
+</div>
+
+<script>
+const container = document.getElementById("container");
+const toggleBtn = document.getElementById("toggleBtn");
+
+let isSignUp = false;
+
+document.getElementById("signUpBtn").onclick = () => {
+    container.classList.add("active");
+    update(true);
+};
+
+document.getElementById("signInBtn").onclick = () => {
+    container.classList.remove("active");
+    update(false);
+};
+
+toggleBtn.onclick = () => {
+    container.classList.toggle("active");
+    isSignUp = !isSignUp;
+    update(isSignUp);
+};
+
+function update(state){
+    const title = document.getElementById("title");
+    const text = document.getElementById("text");
+
+    if(state){
+        title.innerText="Welcome Back!";
+        text.innerText="Login to continue";
+        toggleBtn.innerText="SIGN IN";
+    }else{
+        title.innerText="Hello Friend";
+        text.innerText="Start your journey with us";
+        toggleBtn.innerText="SIGN UP";
+    }
+}
+</script>
+
+</body>
+</html>
