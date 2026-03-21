@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fee Management</title>
+<style>
+  .header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 20px;
+  background:rgba(239, 236, 241, 0.7);
+  border-radius:10px;
+}
+
+.logo-section{
+  display:flex;
+  align-items:center;
+}
+
+.logo{
+  width:50px;
+  height:50px;
+  margin-right:10px;
+  animation: moveLogo 3s infinite alternate;
+}
+
+@keyframes moveLogo{
+  from{transform: translateY(0px);}
+  to{transform: translateY(-10px);}
+}
+
+.college-name{
+  font-size:20px;
+}
+
+.menu a{
+  color:white;
+  text-decoration:none;
+  margin:0 10px;
+  transition:0.3s;
+}
+
+.menu a:hover{
+  color:red;
+  transform:scale(1.1);
+} .navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 8%;
+  background: #ac067a;
+  color: rgb(49, 138, 27);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* Menu */
+.menu {
+  list-style: none;
+  display: flex;
+}
+
+.menu li {
+  margin: 0 15px;
+}
+
+.menu a {
+  color: white;
+  text-decoration: none;
+  position: relative;
+  transition: 0.3s;
+}
+
+/* Underline animation */
+.menu a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  background: red;
+  left: 0;
+  bottom: -5px;
+  transition: 0.3s;
+}
+
+.menu a:hover::after {
+  width: 100%;
+}
+
+/* Buttons */
+.auth-buttons a {
+  margin-left: 10px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* Sign In */
+.signin {
+  color: white;
+  border: 1px solid white;
+}
+
+.signin:hover {
+  background: rgb(250, 248, 248);
+  color: rgb(173, 7, 7);
+}
+
+/* Sign Up */
+.signup {
+  background: red;
+  color: white;
+}
+
+.signup:hover {
+  background: darkred;
+}
+
+/* Header adjust */
+header {
+  margin-top: 70px;
+}
+
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body {
+  font-family: Arial;
+  margin: 0;
+  padding: 0;
+  color: white;
+  animation: gradientBG 12s infinite;
+  background: linear-gradient(-45deg, #1e3c72, #2a5298, #ff512f, #dd2476);
+  background-size: 400% 400%;
+}
+@keyframes gradientBG {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+.container { max-width: 900px; margin: auto; padding: 20px; }
+input, select, button { padding: 10px; margin: 5px; width: 100%; border-radius: 5px; border: none; }
+button { background: rgb(158, 47, 3); color: white; cursor: pointer; }
+.hidden {display:none;}
+.card { background: rgba(192, 2, 2, 0.6); padding: 15px; border-radius: 10px; margin-top: 10px; }
+.small-btn{ width:auto; display:inline-block; margin-top:10px; }
+button:hover {
+  background: rgb(18, 146, 1);
+  transform: scale(1.05);
+}
+input:hover, select:hover {
+  border: 2px solid rgb(7, 255, 19);
+  transform: scale(1.02);
+  transition: 0.3s;
+}
+
+header{
+  height:55vh;
+  border-radius: 35px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  background:linear-gradient(135deg,#142755,#5f7c9c);
+  text-align:center;
+  padding:5px;
+}
+
+header img{
+  width:250px;
+  border-radius:50%;
+  border:4px solid #38bdf8;
+  animation: float 2s infinite ease-in-out;
+}
+
+@keyframes float{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+  100%{transform:translateY(0)}
+}
+
+h1{
+  font-size:clamp(28px,5vw,42px);
+  color:#38bdf8;
+  margin-top:15px;
+}
+</style>
+</head>
+<body>
+
+</header><nav class="navbar">
+  <h2>SSI INTER COLLEGE</h2>
+
+  <ul class="menu">
+    <li><a href="#">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+     <li><a href="#contact">More</a></li>
+  </ul>
+
+  <div class="auth-buttons">
+    <a href="file:///C:/Users/Aditya/OneDrive/Desktop/webtask/sign%20in/index.html" class="signin">Sign In</a>
+    <a href="file:///C:/Users/Aditya/OneDrive/Desktop/webtask/sign%20up/index.html" class="signup">Sign Up</a>
+  </div>
+</nav>
+<header>
+  <img src="file:///C:/Users/Aditya/OneDrive/Desktop/Resume/college/college.jpg">
+  <h1>SHRI SARASVATI INTER COLLAGE LAKHANPUR</h1>
+  <p> Student Fee Management System | Building Safe & Secure Data |<br> Web Developer</p>
+  
+</header>
+
+<div class="container">
+
+<!-- STUDENT CHECK (OUTSIDE LOGIN) -->
+<div id="studentCheck">
+<h2>Student Fee Check</h2>
+<input id="c_roll" placeholder="Roll">
+<input id="c_name" placeholder="Name">
+<input id="c_father" placeholder="Father">
+<input id="c_class" placeholder="Class">
+<input id="c_section" placeholder="Section">
+<button onclick="checkStatus()">Check</button>
+<div id="status"></div>
+</div>
+
+<hr>
+
+<!-- ADMIN LOGIN -->
+<div id="login">
+<h2>Admin Login</h2>
+<input id="adminId" type="password" placeholder="Enter Admin ID">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+<h2>Fee Form</h2>
+<input id="roll" placeholder="Roll Number">
+<input id="name" placeholder="Student Name">
+<input id="father" placeholder="Father Name">
+<input id="classInput" placeholder="Class">
+<input id="section" placeholder="Section">
+<select id="month">
+<option>January</option>
+<option>February</option>
+<option>March</option>
+<option>April</option>
+<option>May</option>
+<option>June</option>
+<option>July</option>
+<option>August</option>
+<option>September</option>
+<option>October</option>
+<option>November</option>
+<option>December</option>
+</select>
+<input type="date" id="date">
+<input id="amount" placeholder="Amount">
+<button onclick="payFee()">Pay Fee</button>
+
+<div id="receipt"></div>
+
+<h3>Delete Wrong Entry</h3>
+<input id="d_roll" placeholder="Roll Number">
+<input id="d_month" placeholder="Month">
+<button onclick="deleteFee()">Delete Fee</button>
+<div id="deleteMsg"></div>
+</div>
+
+</div>
+
+<script>
+let storedData = JSON.parse(localStorage.getItem("fees")) || [];
+
+function login(){
+  let id = document.getElementById("adminId").value;
+  let pass = document.getElementById("password").value;
+
+  if(id === "SURESH VISHWAKARMA" && pass === "7666373923"){
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+  } else {
+    alert("Wrong Login");
+  }
+}
+
+function payFee(){
+  let data = {
+    roll: document.getElementById("roll").value,
+    name: document.getElementById("name").value,
+    father: document.getElementById("father").value,
+    class: document.getElementById("classInput").value,
+    section: document.getElementById("section").value,
+    month: document.getElementById("month").value,
+    date: document.getElementById("date").value,
+    amount: document.getElementById("amount").value
+  };
+
+  storedData.push(data);
+  localStorage.setItem("fees", JSON.stringify(storedData));
+
+  let receipt = `
+  <div class='card'>
+  <h3>Receipt</h3>
+  Roll: ${data.roll}<br>
+  Name: ${data.name}<br>
+  Father: ${data.father}<br>
+  Class: ${data.class} - ${data.section}<br>
+  Month: ${data.month}<br>
+  Date: ${data.date}<br>
+  Amount: ${data.amount}<br>
+  <button class='small-btn' onclick="window.print()">Print</button>
+  </div>`;
+
+  document.getElementById("receipt").innerHTML = receipt;
+}
+
+function deleteFee(){
+  let roll = document.getElementById("d_roll").value;
+  let month = document.getElementById("d_month").value;
+
+  let index = storedData.findIndex(x => x.roll === roll && x.month === month);
+
+  if(index !== -1){
+    storedData.splice(index,1);
+    localStorage.setItem("fees", JSON.stringify(storedData));
+    document.getElementById("deleteMsg").innerHTML = "<div class='card'>Fee Deleted Successfully</div>";
+  } else {
+    document.getElementById("deleteMsg").innerHTML = "<div class='card'>Record Not Found</div>";
+  }
+}
+
+function checkStatus(){
+  let r = document.getElementById("c_roll").value;
+  let n = document.getElementById("c_name").value;
+  let f = document.getElementById("c_father").value;
+  let c = document.getElementById("c_class").value;
+  let s = document.getElementById("c_section").value;
+
+  let result = storedData.find(x => 
+    x.roll === r && x.name === n && x.father === f && x.class === c && x.section === s
+  );
+
+  if(result){
+    document.getElementById("status").innerHTML = `
+    <div class='card'>
+    <h3>Fee Found</h3>
+    Name: ${result.name}<br>
+    Month: ${result.month}<br>
+    Amount: ${result.amount}<br>
+    <button class='small-btn' onclick="window.print()">Print</button>
+    </div>`;
+  } else {
+    document.getElementById("status").innerHTML = "No Record Found";
+  }
+}
+</script>
+<footer style="text-align:center; padding:15px; margin-top:20px; background:rgba(0,0,0,0.6); border-radius:10px;">
+  <p>© 2026 College Fee Management System</p>
+  <p>All Rights Reserved</p>
+  <p>Designed & Developed by Aditya vishwakarma</p>
+</footer>
+
+</body>
+</html>
