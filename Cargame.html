@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nitro Racer Pro | Ferrari Pro Level</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+
+    <style>
+        :root {
+            --neon-red: #ff003c;
+            --neon-blue: #00f2ff;
+            --neon-green: #39ff14;
+            --neon-yellow: #fff200;
+            --glass: rgba(255, 255, 255, 0.1);
+        }
+
+        body { 
+            margin: 0; overflow: hidden; 
+            background: linear-gradient(45deg, #050505, #121212);
+            transition: background 3s ease;
+            font-family: 'Segoe UI', sans-serif; touch-action: none; 
+        }
+        
+        #ui { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 100; }
+
+        /* Modern HUD */
+        #hud { 
+            position: absolute; top: 20px; left: 20px; right: 20px;
+            display: none; justify-content: space-between; pointer-events: none;
+        }
+
+        .hud-card {
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+            border-left: 4px solid var(--neon-red); padding: 10px 20px;
+            border-radius: 5px; color: white;
+        }
+
+        /* Side Toolbar (Attractive) */
+        .side-toolbar {
+            position: absolute; right: 15px; top: 100px;
+            display: flex; flex-direction: column; gap: 12px; pointer-events: all;
+        }
+
+        .tool-btn {
+            width: 45px; height: 45px; border-radius: 50%; border: 2px solid white;
+            background: var(--glass); color: white; font-size: 18px; cursor: pointer;
+            backdrop-filter: blur(5px); transition: 0.3s; box-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+        .tool-btn:active { transform: scale(0.8); background: white; color: black; }
+
+        /* Pro Game Controls */
+        .controls-container { 
+            position: absolute; bottom: 30px; width: 100%; 
+            display: none; justify-content: space-between; padding: 0 25px; 
+            box-sizing: border-box; pointer-events: all;
+        }
+
+        .control-group { display: flex; gap: 15px; align-items: flex-end; }
+
+        .btn-pro {
+            width: 75px; height: 75px; border-radius: 20px;
+            background: linear-gradient(145deg, rgba(255,255,255,0.2), rgba(0,0,0,0.4));
+            border: 2px solid rgba(255,255,255,0.3); color: white;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-size: 24px; font-weight: bold; cursor: pointer;
+            backdrop-filter: blur(10px); transition: 0.1s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .btn-pro:active { transform: translateY(4px); filter: brightness(1.5); }
+        .btn-pro span { font-size: 10px; margin-top: 5px; text-transform: uppercase; }
+
+        /* Specific Button Colors */
+        .btn-nitro { border-color: var(--neon-blue); color: var(--neon-blue); box-shadow: 0 0 15px var(--neon-blue); }
+        .btn-brake { border-color: var(--neon-red); color: var(--neon-red); box-shadow: 0 0 15px var(--neon-red); }
+        .btn-horn { border-color: var(--neon-yellow); color: var(--neon-yellow); }
+
+        /* Screen Design */
+        .screen { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.9); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 500; pointer-events: all;
+        }
+
+        .start-title { font-size: 50px; color: white; text-shadow: 0 0 20px var(--neon-red); margin: 0; }
+        .play-btn {
+            margin-top: 30px; padding: 20px 60px; border-radius: 50px; border: none;
+            background: var(--neon-red); color: white; font-size: 22px; font-weight: bold;
+            cursor: pointer; box-shadow: 0 0 30px var(--neon-red); transition: 0.3s;
+        }
+        .play-btn:disabled { background: #333; box-shadow: none; cursor: not-allowed; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div id="ui">
+    <!-- HUD -->
+    <div id="hud">
+        <div class="hud-card">
+            <div style="font-size:10px; color:var(--neon-blue)">COINS</div>
+            <div id="coin-txt" style="font-size:24px; font-weight:900;">000</div>
+        </div>
+        <div class="hud-card" style="border-left: 4px solid var(--neon-green); text-align:right;">
+            <div style="font-size:10px; color:var(--neon-green)">SPEED</div>
+            <div style="font-size:24px; font-weight:900;"><span id="speed-txt">0</span> <small style="font-size:12px">KM/H</small></div>
+        </div>
+    </div>
+
+    <!-- Side Menu -->
+    <div id="side-menu" class="side-toolbar hidden">
+        <button class="tool-btn" onclick="changeCarColor()">🎨</button>
+        <button class="tool-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
+        <button class="tool-btn" onclick="adjustVolume(0.05)">➕</button>
+        <button class="tool-btn" onclick="adjustVolume(-0.05)">➖</button>
+    </div>
+
+    <!-- Gameplay Controls -->
+    <div id="controls" class="controls-container">
+        <div class="control-group">
+            <div class="btn-pro" id="l-btn">◀<span>Left</span></div>
+            <div class="btn-pro btn-horn" id="h-btn">🎺<span>Horn</span></div>
+        </div>
+        
+        <div class="control-group">
+            <div class="btn-pro btn-brake" id="brake-btn">🛑<span>Brake</span></div>
+            <div class="btn-pro btn-nitro" id="b-btn">⚡<span>Nitro</span></div>
+            <div class="btn-pro" id="r-btn">▶<span>Right</span></div>
+        </div>
+    </div>
+
+    <!-- Screens -->
+    <div id="start-scr" class="screen">
+        <h1 class="start-title">FERRARI <span style="color:var(--neon-red)">PRO</span></h1>
+        <p id="status-msg" style="color:var(--neon-blue);">INITIALIZING V12 ENGINE...</p>
+        <button id="start-btn" class="play-btn" onclick="startGame()" disabled>LOADING...</button>
+    </div>
+
+    <div id="over-scr" class="screen hidden">
+        <h1 style="color:var(--neon-red); font-size:60px;">CRASHED</h1>
+        <button class="play-btn" onclick="location.reload()">RETRY RACE</button>
+    </div>
+</div>
+
+<!-- Audio for background music -->
+<audio id="bg-music" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    let scene, camera, renderer, playerCar, carModel;
+    let active = false, score = 0, speed = 0, targetSpeed = 0.45;
+    let roadParts = [], enemies = [], coins = [];
+    let moveLeft = false, moveRight = false, isBoost = false, isBraking = false, isMuted = false;
+    
+    // Audio Context for Engine
+    let audioCtx, engineOsc, engineOsc2, engineFilter, engineGain, masterVolume = 0.2;
+    const bgMusic = document.getElementById('bg-music');
+    
+
+    function init() {
+        scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(0x000000, 10, 200);
+
+        camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 6, 14);
+
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.outputEncoding = THREE.sRGBEncoding;
+        document.body.appendChild(renderer.domElement);
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+        const sun = new THREE.DirectionalLight(0xffffff, 1.2);
+        sun.position.set(10, 20, 10); scene.add(sun);
+
+        for(let i=0; i<15; i++) createRoadSection(-i * 40);
+
+        const dracoLoader = new THREE.DRACOLoader();
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+        const loader = new THREE.GLTFLoader();
+        loader.setDRACOLoader(dracoLoader);
+
+        loader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/ferrari.glb', (gltf) => {
+            carModel = gltf.scene;
+            playerCar = carModel.clone();
+            playerCar.scale.set(1.7, 1.7, 1.7);
+            applyColor(playerCar, 0xff0000);
+
+            // Lights (White as requested)
+            const headL = new THREE.PointLight(0xffffff, 3, 20);
+            headL.position.set(-1.2, 0.5, -2.5); playerCar.add(headL);
+            const headR = headL.clone(); headR.position.x = 1.2; playerCar.add(headR);
+            const tailL = new THREE.PointLight(0xffffff, 2, 10);
+            tailL.position.set(-1, 0.5, 2.5); playerCar.add(tailL);
+            const tailR = tailL.clone(); tailR.position.x = 1; playerCar.add(tailR);
+
+            scene.add(playerCar);
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('start-btn').innerText = "START ENGINE";
+        });
+
+        setupInputs();
+        startGradientBG();
+        animate();
+    }
+
+    function createRoadSection(z) {
+        const group = new THREE.Group();
+        const road = new THREE.Mesh(new THREE.PlaneGeometry(24, 40), new THREE.MeshStandardMaterial({color: 0x111111}));
+        road.rotation.x = -Math.PI/2; group.add(road);
+
+        const line = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 15), new THREE.MeshBasicMaterial({color: 0xffffff}));
+        line.rotation.x = -Math.PI/2; line.position.y = 0.1; group.add(line);
+
+        const bL = new THREE.Mesh(new THREE.BoxGeometry(10, 30, 15), new THREE.MeshStandardMaterial({color: 0x0a0a0a}));
+        bL.position.set(-20, 15, 0); group.add(bL);
+        const bR = bL.clone(); bR.position.x = 20; group.add(bR);
+
+        group.position.z = z;
+        scene.add(group); roadParts.push(group);
+    }
+
+    function initAudio() {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        engineOsc = audioCtx.createOscillator();
+        engineOsc2 = audioCtx.createOscillator();
+        engineFilter = audioCtx.createBiquadFilter();
+        engineGain = audioCtx.createGain();
+        engineOsc.type = 'sawtooth'; engineOsc2.type = 'square';
+        engineFilter.type = 'lowpass';
+        engineGain.gain.value = masterVolume;
+        engineOsc.connect(engineFilter); engineOsc2.connect(engineFilter);
+        engineFilter.connect(engineGain); engineGain.connect(audioCtx.destination);
+        engineOsc.start(); engineOsc2.start();
+        
+        bgMusic.volume = 0.3;
+        bgMusic.play();
+    }
+
+    function toggleMute() {
+        isMuted = !isMuted;
+        const vol = isMuted ? 0 : masterVolume;
+        if(engineGain) engineGain.gain.value = vol;
+        bgMusic.muted = isMuted;
+        document.getElementById('mute-btn').innerText = isMuted ? "🔇" : "🔊";
+    }
+
+    function adjustVolume(v) {
+        masterVolume = THREE.MathUtils.clamp(masterVolume + v, 0, 0.6);
+        if(engineGain && !isMuted) engineGain.gain.value = masterVolume;
+    }
+
+    function applyColor(model, color) {
+        model.traverse(c => { if(c.isMesh && (c.name.includes('body') || c.name.includes('paint'))) { c.material = c.material.clone(); c.material.color.set(color); } });
+    }
+
+    let colState = 0;
+    function changeCarColor() {
+        colState = (colState + 1) % 2;
+        applyColor(playerCar, colState === 0 ? 0xff0000 : 0xffff00);
+    }
+
+    function startGradientBG() {
+        const colors = ['#050505', '#1a0505', '#051a1a', '#05051a', '#1a1a05'];
+        setInterval(() => {
+            document.body.style.background = `linear-gradient(45deg, ${colors[Math.floor(Math.random()*colors.length)]}, #000)`;
+        }, 3000);
+    }
+
+    function playHorn() {
+        if(!audioCtx) return;
+        const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+        o.type = 'triangle'; o.frequency.setValueAtTime(400, audioCtx.currentTime);
+        g.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start(); o.stop(audioCtx.currentTime+0.4);
+        enemies.forEach(e => { if(e.position.z > -60) e.position.x = e.position.x > 0 ? 15 : -15; });
+    }
+
+    function startGame() {
+        document.getElementById('start-scr').classList.add('hidden');
+        document.getElementById('hud').style.display = 'flex';
+        document.getElementById('controls').style.display = 'flex';
+        document.getElementById('side-menu').classList.remove('hidden');
+        initAudio(); active = true;
+        setInterval(() => {
+            if(!active) return;
+            const enemy = carModel.clone();
+            enemy.scale.set(1.7, 1.7, 1.7);
+            enemy.position.set((Math.random()-0.5)*18, 0, -150); enemy.rotation.y = Math.PI;
+            applyColor(enemy, Math.random()*0xffffff);
+            scene.add(enemy); enemies.push(enemy);
+
+            const coin = new THREE.Mesh(new THREE.CylinderGeometry(0.7,0.7,0.7,20), new THREE.MeshStandardMaterial({color: 0xffd700, metalness:1}));
+            coin.rotation.x = Math.PI/2; coin.position.set((Math.random()-0.5)*16, 1.2, -120);
+            scene.add(coin); coins.push(coin);
+        }, 1800);
+    }
+
+    // --- SOUND OFF ON CRASH LOGIC ---
+    function gameOver() {
+        active = false; // Game stop
+
+        // 1. Engine sound band karein
+        if (engineGain) {
+            engineGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+        }
+
+        // 2. Background music band karein
+        if (bgMusic) {
+            bgMusic.pause();
+            bgMusic.currentTime = 0;
+        }
+
+        // 3. UI Screen dikhayein
+        document.getElementById('over-scr').classList.remove('hidden');
+        document.getElementById('hud').style.display = 'none';
+        document.getElementById('controls').style.display = 'none';
+        document.getElementById('side-menu').classList.add('hidden');
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        if(active && playerCar) {
+            // High speed controls
+            if(moveLeft) playerCar.position.x -= 0.30;
+            if(moveRight) playerCar.position.x += 0.30;
+            playerCar.position.x = THREE.MathUtils.clamp(playerCar.position.x, -9, 9);
+            playerCar.rotation.z = THREE.MathUtils.lerp(playerCar.rotation.z, (moveLeft?0.1:moveRight?-0.1:0), 0.2);
+
+            let t = isBraking ? 0 : (isBoost ? targetSpeed * 2.5 : targetSpeed);
+            speed = THREE.MathUtils.lerp(speed, t, isBraking ? 0.15 : 0.06);
+
+            if(engineOsc && !isMuted) {
+                let f = 50 + (speed * 600);
+                engineOsc.frequency.setTargetAtTime(f, audioCtx.currentTime, 0.1);
+                engineOsc2.frequency.setTargetAtTime(f*0.5, audioCtx.currentTime, 0.1);
+                engineFilter.frequency.setTargetAtTime(300 + (speed*4000), audioCtx.currentTime, 0.1);
+            }
+
+            document.getElementById('speed-txt').innerText = Math.floor(speed * 480);
+            document.getElementById('coin-txt').innerText = score;
+
+            roadParts.forEach(p => { p.position.z += speed * 30; if(p.position.z > 40) p.position.z -= 15 * 40; });
+            enemies.forEach((e, i) => {
+                e.position.z += speed * 1 + 0.3;
+                // Collision hone par naya gameOver call hoga
+                if(e.position.distanceTo(playerCar.position) < 2.4) { 
+                    gameOver(); 
+                }
+                if(e.position.z > 20) { scene.remove(e); enemies.splice(i, 1); }
+            });
+            coins.forEach((c, i) => {
+                c.position.z += speed * 5; c.rotation.y += 0.1;
+                if(c.position.distanceTo(playerCar.position) < 2) { score += 10; scene.remove(c); coins.splice(i, 1); }
+                if(c.position.z > 20) { scene.remove(c); coins.splice(i, 1); }
+            });
+            camera.position.x = playerCar.position.x * 0.45;
+            camera.lookAt(playerCar.position.x, 1.5, -5);
+        }
+        renderer.render(scene, camera);
+    }
+
+    function setupInputs() {
+        const L=document.getElementById('l-btn'), R=document.getElementById('r-btn'), B=document.getElementById('b-btn'), H=document.getElementById('h-btn'), BR=document.getElementById('brake-btn');
+        const startL = (e) => { e.preventDefault(); moveLeft = true; };
+        const endL = () => moveLeft = false;
+        const startR = (e) => { e.preventDefault(); moveRight = true; };
+        const endR = () => moveRight = false;
+
+        L.ontouchstart = L.onmousedown = startL; L.ontouchend = L.onmouseup = endL;
+        R.ontouchstart = R.onmousedown = startR; R.ontouchend = R.onmouseup = endR;
+        B.ontouchstart = B.onmousedown = () => isBoost = true; B.ontouchend = B.onmouseup = () => isBoost = false;
+        
+        // Toggle Brake Logic
+        BR.onclick = (e) => {
+            e.preventDefault();
+            isBraking = !isBraking; 
+            if (isBraking) {
+                BR.style.borderColor = "var(--neon-green)"; 
+                BR.innerHTML = "🏁<span>Drive</span>";     
+                BR.style.boxShadow = "0 0 20px var(--neon-green)";
+            } else {
+                BR.style.borderColor = "var(--neon-red)";   
+                BR.innerHTML = "🛑<span>Brake</span>";     
+                BR.style.boxShadow = "0 0 15px var(--neon-red)";
+            }
+        };
+        H.onclick = playHorn;
+    }
+
+    window.onresize = () => { camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); };
+    window.onload = init;
+</script>
+</body>
+</html>
