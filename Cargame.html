@@ -262,7 +262,7 @@
     let colState = 0;
     function changeCarColor() {
         colState = (colState + 1) % 2;
-        applyColor(playerCar, colState === 0 ? 0xff0000 : 0xffff00);
+        applyColor(playerCar, colState === 0 ? 0xff0000 : 0xffff00 : 0x00ff00 : 0x0000ff : 0xffffff : 0x000000);
     }
 
     function startGradientBG() {
@@ -279,7 +279,7 @@
         g.gain.setValueAtTime(0.2, audioCtx.currentTime);
         o.connect(g); g.connect(audioCtx.destination);
         o.start(); o.stop(audioCtx.currentTime+0.4);
-        enemies.forEach(e => { if(e.position.z > -60) e.position.x = e.position.x > 0 ? 15 : -15; });
+        enemies.forEach(e => { if(e.position.z > -60) e.position.x = e.position.x > 0 ? 10 : -10; });
     }
 
     function startGame() {
@@ -296,7 +296,7 @@
             applyColor(enemy, Math.random()*0xffffff);
             scene.add(enemy); enemies.push(enemy);
 
-            const coin = new THREE.Mesh(new THREE.CylinderGeometry(0.7,0.7,0.7,20), new THREE.MeshStandardMaterial({color: 0xffd700, metalness:1}));
+            const coin = new THREE.Mesh(new THREE.CylinderGeometry(0.9,0.9,0.9,25), new THREE.MeshStandardMaterial({color: 0xffff00, metalness:0.7}));
             coin.rotation.x = Math.PI/2; coin.position.set((Math.random()-0.5)*16, 1.2, -120);
             scene.add(coin); coins.push(coin);
         }, 1800);
@@ -346,9 +346,9 @@
             document.getElementById('speed-txt').innerText = Math.floor(speed * 480);
             document.getElementById('coin-txt').innerText = score;
 
-            roadParts.forEach(p => { p.position.z += speed * 5; if(p.position.z > 40) p.position.z -= 15 * 40; });
+            roadParts.forEach(p => { p.position.z += speed * 3; if(p.position.z > 40) p.position.z -= 15 * 40; });
             enemies.forEach((e, i) => {
-                e.position.z += speed * 3 + 0.3;
+                e.position.z += speed * 2 + 0.3;
                 // Collision hone par naya gameOver call hoga
                 if(e.position.distanceTo(playerCar.position) < 3) { 
                     gameOver(); 
@@ -356,7 +356,7 @@
                 if(e.position.z > 20) { scene.remove(e); enemies.splice(i, 1); }
             });
             coins.forEach((c, i) => {
-                c.position.z += speed * 2; c.rotation.y += 0.3;
+                c.position.z += speed * 4; c.rotation.y += 0.3;
                 if(c.position.distanceTo(playerCar.position) < 2) { score += 10; scene.remove(c); coins.splice(i, 1); }
                 if(c.position.z > 20) { scene.remove(c); coins.splice(i, 1); }
             });
