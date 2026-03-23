@@ -238,7 +238,7 @@
         engineFilter.connect(engineGain); engineGain.connect(audioCtx.destination);
         engineOsc.start(); engineOsc2.start();
         
-        bgMusic.volume = 0.3;
+        bgMusic.volume = 0.8;
         bgMusic.play();
     }
 
@@ -358,7 +358,7 @@ function changeCarColor() {
                 if(e.position.z > 20) { scene.remove(e); enemies.splice(i, 1); }
             });
             coins.forEach((c, i) => {
-                c.position.z += speed * 4; c.rotation.y += 0.3;
+                c.position.z += speed * 5; c.rotation.y += 0.3;
                 if(c.position.distanceTo(playerCar.position) < 2) { score += 10; scene.remove(c); coins.splice(i, 1); }
                 if(c.position.z > 20) { scene.remove(c); coins.splice(i, 1); }
             });
