@@ -346,9 +346,9 @@
             document.getElementById('speed-txt').innerText = Math.floor(speed * 480);
             document.getElementById('coin-txt').innerText = score;
 
-            roadParts.forEach(p => { p.position.z += speed * 15; if(p.position.z > 40) p.position.z -= 15 * 40; });
+            roadParts.forEach(p => { p.position.z += speed * 10; if(p.position.z > 40) p.position.z -= 15 * 40; });
             enemies.forEach((e, i) => {
-                e.position.z += speed * 7 + 0.3;
+                e.position.z += speed * 3 + 0.3;
                 // Collision hone par naya gameOver call hoga
                 if(e.position.distanceTo(playerCar.position) < 3) { 
                     gameOver(); 
@@ -356,7 +356,7 @@
                 if(e.position.z > 20) { scene.remove(e); enemies.splice(i, 1); }
             });
             coins.forEach((c, i) => {
-                c.position.z += speed * 9; c.rotation.y += 0.1;
+                c.position.z += speed * 4; c.rotation.y += 0.3;
                 if(c.position.distanceTo(playerCar.position) < 2) { score += 10; scene.remove(c); coins.splice(i, 1); }
                 if(c.position.z > 20) { scene.remove(c); coins.splice(i, 1); }
             });
