@@ -350,7 +350,7 @@
             enemies.forEach((e, i) => {
                 e.position.z += speed * 1 + 0.3;
                 // Collision hone par naya gameOver call hoga
-                if(e.position.distanceTo(playerCar.position) < 4) { 
+                if(e.position.distanceTo(playerCar.position) < 3) { 
                     gameOver(); 
                 }
                 if(e.position.z > 20) { scene.remove(e); enemies.splice(i, 1); }
