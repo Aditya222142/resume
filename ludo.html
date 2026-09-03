@@ -1,0 +1,2908 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<title>Znova Ludo - 3D</title>
+
+<style>
+/* =========================================================
+   ZNOVA LUDO - SINGLE FILE
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+    --red:#ed2929;
+    --red-dark:#a90808;
+
+    --green:#16a84a;
+    --green-dark:#056b2b;
+
+    --yellow:#f4c516;
+    --yellow-dark:#b88600;
+
+    --blue:#1594e8;
+    --blue-dark:#075c9b;
+
+    --board-size:min(94vw,680px);
+}
+
+body{
+    min-height:100vh;
+    overflow-x:hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            #424852 0%,
+            #1d2229 42%,
+            #090b0f 100%
+        );
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:14px;
+}
+
+/* =========================================================
+   GAME WRAPPER
+========================================================= */
+
+.game{
+    width:100%;
+    max-width:720px;
+    margin:auto;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+    padding:0 3px;
+}
+
+.brand{
+    font-size:24px;
+    font-weight:900;
+    letter-spacing:1px;
+
+    text-shadow:
+        0 2px 0 #000,
+        0 5px 12px #000b;
+}
+
+.brand span{
+    font-size:11px;
+    display:block;
+    color:#aeb5bf;
+    letter-spacing:2px;
+    margin-top:2px;
+}
+
+.status{
+    padding:8px 14px;
+    border-radius:30px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #303740,
+            #171b20
+        );
+
+    border:1px solid #4b535d;
+
+    box-shadow:
+        inset 0 1px 0 #ffffff20,
+        0 5px 15px #0008;
+
+    font-size:13px;
+    font-weight:bold;
+}
+
+/* =========================================================
+   BOARD OUTER
+========================================================= */
+
+.board-wrap{
+    position:relative;
+    width:var(--board-size);
+    height:var(--board-size);
+    margin:auto;
+
+    padding:9px;
+
+    border-radius:25px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #3d4249,
+            #111419 48%,
+            #30353c
+        );
+
+    box-shadow:
+        0 25px 50px #000d,
+        inset 0 2px 2px #ffffff28,
+        inset 0 -3px 5px #000;
+
+    user-select:none;
+}
+
+/* =========================================================
+   BOARD
+========================================================= */
+
+.board{
+    position:relative;
+    width:100%;
+    height:100%;
+
+    overflow:hidden;
+
+    border-radius:17px;
+
+    background:#e9e9e9;
+
+    box-shadow:
+        inset 0 0 0 2px #111,
+        inset 0 0 15px #0008;
+}
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.grid{
+    position:absolute;
+    inset:0;
+
+    display:grid;
+
+    grid-template-columns:repeat(15,1fr);
+    grid-template-rows:repeat(15,1fr);
+
+    z-index:1;
+}
+
+.cell{
+    position:relative;
+
+    border:1px solid rgba(40,40,40,.25);
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #d8d8d8
+        );
+
+    box-shadow:
+        inset 1px 1px 0 #fff8,
+        inset -1px -1px 0 #9995;
+}
+
+.cell.path{
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f6f6f8
+        );
+}
+
+.cell.red-lane{
+    background:
+        linear-gradient(
+            145deg,
+            #ff7777,
+            #faf5f5
+        );
+}
+
+.cell.green-lane{
+    background:
+        linear-gradient(
+            145deg,
+            #65db88,
+            #129944
+        );
+}
+
+.cell.yellow-lane{
+    background:
+        linear-gradient(
+            145deg,
+            #ffe96c,
+            #e8b500
+        );
+}
+
+.cell.blue-lane{
+    background:
+        linear-gradient(
+            145deg,
+            #66c8ff,
+            #138bd2
+        );
+}
+
+/* =========================================================
+   HOME AREAS
+========================================================= */
+
+.home{
+    position:absolute;
+    width:40%;
+    height:40%;
+
+    z-index:5;
+
+    padding:5.2%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:
+        inset 0 4px 10px #ffffff20,
+        inset 0 -7px 15px #0005;
+}
+
+/* Red */
+.home.red{
+    top:0;
+    left:0;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ff4747,
+            #d81717 60%,
+            #a70a0a
+        );
+
+    border-radius:7px 0 0 0;
+}
+
+/* Green */
+.home.green{
+    top:0;
+    right:0;
+
+    background:
+        linear-gradient(
+            215deg,
+            #2bcf65,
+            #119744 60%,
+            #056b2b
+        );
+
+    border-radius:0 7px 0 0;
+}
+
+/* Yellow */
+.home.yellow{
+    right:0;
+    bottom:0;
+
+    background:
+        linear-gradient(
+            215deg,
+            #ffe34c,
+            #e9b800 60%,
+            #b98100
+        );
+
+    border-radius:0 0 7px 0;
+}
+
+/* Blue */
+.home.blue{
+    left:0;
+    bottom:0;
+
+    background:
+        linear-gradient(
+            145deg,
+            #37b9ff,
+            #118bd0 60%,
+            #075d9e
+        );
+
+    border-radius:0 0 0 7px;
+}
+
+/* =========================================================
+   HOME INNER
+========================================================= */
+
+.home-inner{
+    width:100%;
+    height:100%;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ebacac,
+            #7a6b8b
+        );
+
+    border-radius:9px;
+
+    border:2px solid rgba(0,0,0,.22);
+
+    padding:13%;
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:1fr 1fr;
+
+    gap:13%;
+
+    box-shadow:
+        inset 0 3px 6px #fff,
+        inset 0 -5px 8px #7777,
+        0 3px 5px rgba(136, 116, 116, 0.4);
+}
+
+/* =========================================================
+   TOKEN HOME SLOT
+========================================================= */
+
+.slot{
+    position:relative;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            #f7f4f4,
+            #fcf7f7 45%,
+            #f1e8e8
+        );
+
+    border:2px solid #3a3434;
+
+    box-shadow:
+        inset 0 3px 4px #faf7f7,
+        inset 0 -5px 6px rgba(252, 249, 249, 0.533),
+        0 2px 3px rgba(253, 252, 252, 0.467);
+}
+
+/* =========================================================
+   CENTER
+========================================================= */
+
+.center{
+    position:absolute;
+
+    left:40%;
+    top:40%;
+
+    width:20%;
+    height:20%;
+
+    z-index:6;
+
+    overflow:hidden;
+
+    background:#f32323;
+
+    box-shadow:
+        0 0 0 1px #222,
+        0 0 12px #0006;
+}
+
+/* Four triangular sections */
+
+.center::before{
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background:
+        conic-gradient(
+            from -45deg,
+            var(--green) 0deg 90deg,
+            var(--yellow) 90deg 180deg,
+            var(--blue) 180deg 270deg,
+            var(--red) 270deg 360deg
+        );
+
+    
+}
+
+/* =========================================================
+   HOME LANES
+========================================================= */
+
+.lane{
+    position:absolute;
+
+    z-index:4;
+
+    display:grid;
+}
+
+/* 🔴 RED HOME LANE - CELL POSITION FIX */
+.lane.red{
+    left:6.6%;
+    top:46.666%;
+    width:40%;
+    height:6.666%;
+
+    grid-template-columns:repeat(6,1fr);
+}
+
+/* 🟡 YELLOW HOME LANE - CELL POSITION FIX */
+.lane.yellow{
+    right:6.666%;
+    top:46.666%;
+    width:40%;
+    height:6.666%;
+
+    grid-template-columns:repeat(6,1fr);
+}
+/* Green */
+.lane.green{
+    left:46.666%;
+    top:6.666%;
+
+    width:6.666%;
+    height:33.333%;
+
+    grid-template-rows:repeat(5,1fr);
+}
+
+
+
+/* Blue */
+.lane.blue{
+    left:46.666%;
+    bottom:6.666%;
+
+    width:6.666%;
+    height:33.333%;
+
+    grid-template-rows:repeat(5,1fr);
+}
+
+.lane-cell{
+    border:1px solid #5555;
+
+    box-shadow:
+        inset 1px 1px 0 #fff5,
+        inset -1px -1px 0 #0003;
+}
+
+.lane.red .lane-cell{
+    background:
+        linear-gradient(
+            145deg,
+            #f83333,
+            #d71818
+        );
+}
+
+.lane.green .lane-cell{
+    background:
+        linear-gradient(
+            145deg,
+            #40a55d,
+            #0c963e
+        );
+}
+
+.lane.yellow .lane-cell{
+    background:
+        linear-gradient(
+            145deg,
+            #fad831,
+            #e5b400
+        );
+}
+
+.lane.blue .lane-cell{
+    background:
+        linear-gradient(
+            145deg,
+            #54bbee,
+            #108bd1
+        );
+}
+
+/* =========================================================
+   STARS
+========================================================= */
+
+.star{
+    position:absolute;
+    z-index:30;
+
+    width:6.666%;
+    height:6.666%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:clamp(18px,4vw,30px);
+
+    -webkit-text-stroke:1px #222;
+
+    text-shadow:
+        0 2px 3px #0008,
+        0 0 5px #fff8;
+
+    pointer-events:none;
+}
+
+/* 🔴 Red */
+.red-star{
+    left:6.9%;
+    top:40%;
+    color:#ff2929;
+       background:
+        linear-gradient(
+            145deg,
+            #88c7e7,
+            #f73a0b)
+}
+
+/* 🟢 Green */
+.green-star{
+    left:53.5%;
+    top:6.6%;
+    color:#18c957;
+     background:
+        linear-gradient(
+            145deg,
+            #b8dff3,
+            #08c466)
+}
+
+/* 🟡 Yellow */
+.yellow-star{
+    right:6.9%;
+    top:53.5%;
+    color:#ffd21c;
+     background:
+        linear-gradient(
+            145deg,
+            #92bace,
+            #f3f70d)
+}
+
+/* 🔵 Blue */
+.blue-star{
+    left:40%;
+    top:86.6%;
+    color:#20a9ff;
+    background:
+        linear-gradient(
+            145deg,
+            #5bc8ff,
+            #5930ec) 
+}
+/* =========================================================
+   ARROWS
+========================================================= */
+
+.arrow{
+    position:absolute;
+
+    z-index:8;
+
+    width:6.666%;
+    height:6.666%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:clamp(17px,4vw,27px);
+
+    text-shadow:
+        0 2px 2px #0008;
+
+    pointer-events:none;
+}
+
+.arrow.red{
+    left:0;
+    top:46.666%;
+    color:#d71919;
+}
+
+.arrow.green{
+    left:46.666%;
+    top:0;
+    color:#07913b;
+}
+
+.arrow.yellow{
+    right:0;
+    top:46.666%;
+    color:#d2a300;
+}
+
+.arrow.blue{
+    left:46.666%;
+    bottom:0;
+    color:#087bc2;
+}
+
+/* =========================================================
+   TOKENS
+========================================================= */
+
+.token{
+    position:absolute;
+
+    width:5.40%;
+    aspect-ratio:1;
+
+    z-index:20;
+
+    border-radius:80%;
+
+    transform:
+        translate(-50%,-50%);
+
+    border:1px solid hsl(300, 17%, 98%);
+
+    cursor:pointer;
+
+    transition:
+        left .22s ease,
+        top .22s ease,
+        transform .18s ease;
+
+    box-shadow:
+        0 7px 8px rgba(172, 139, 139, 0.6),
+        inset 0 4px 5px #c27171aa,
+        inset 0 -7px 9px rgba(207, 77, 77, 0.467);
+}
+
+/* token shine */
+.token::before{
+    content:"";
+
+    position:absolute;
+
+    width:35%;
+    height:22%;
+
+    left:22%;
+    top:14%;
+
+    border-radius:50%;
+
+    
+
+    transform:rotate(-25deg);
+
+    filter:blur(1px);
+}
+
+/* token center */
+.token::after{
+    content:"";
+
+    position:absolute;
+
+    width:35%;
+    height:35%;
+
+    left:32.5%;
+    top:32.5%;
+
+    border-radius:50%;
+
+    background:#ff000020;
+
+    box-shadow:
+        inset 0 2px 3px rgba(189, 88, 88, 0.333),
+        inset 0 -2px 3px rgba(194, 4, 4, 0.267);
+}
+
+.token.red{
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            #ff8585,
+            #fd1414 48%,
+            #a50000
+        );
+}
+
+.token.green{
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            #37f76d,
+            #0cca52 48%,
+            #09aa4c
+        );
+}
+
+.token.yellow{
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            #fff39a,
+            #f5c817 48%,
+            #a97800
+        );
+}
+
+.token.blue{
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            #a0ddff,
+            #0a78bd 48%,
+            #2477aa
+        );
+}
+
+
+/* selectable token */
+.token.selectable{
+    animation:
+        tokenPulse .7s infinite alternate;
+
+    box-shadow:
+        0 0 0 4px rgba(247, 241, 241, 0.719),
+        0 0 17px #fff,
+        0 8px 10px #0009,
+        inset 0 4px 5px #fff;
+}
+
+@keyframes tokenPulse{
+    from{
+        transform:
+            translate(-50%,-50%)
+            scale(1);
+    }
+
+    to{
+        transform:
+            translate(-50%,-50%)
+            scale(1.16);
+    }
+}
+
+/* =========================================================
+   CONTROL PANEL
+========================================================= */
+
+.controls{
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:16px;
+
+    margin-top:15px;
+}
+
+/* player info */
+.player-box{
+    min-width:150px;
+
+    padding:10px 16px;
+
+    border-radius:16px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #30363e,
+            #475b7e
+        );
+
+    border:1px solid #4b535c;
+
+    box-shadow:
+        inset 0 1px 0 #ffffff18,
+        0 7px 16px #0009;
+}
+
+.player-label{
+    font-size:11px;
+    color:#fd1003;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.player-name{
+    margin-top:3px;
+
+    font-size:18px;
+    font-weight:900;
+}
+
+.player-name.red{color:#fc0505;}
+.player-name.green{color:#15e457;}
+.player-name.yellow{color:#f7d219;}
+.player-name.blue{color:#29a2ff;}
+
+/* =========================================================
+   DICE
+========================================================= */
+
+.dice{
+    position:relative;
+
+    width:78px;
+    height:78px;
+
+    border:0;
+
+    border-radius:18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #e9e9e9 45%,
+            #bdbdbd
+        );
+
+    color:#111;
+
+    font-size:43px;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 10px 15px #000a,
+        inset 0 2px 2px #fff,
+        inset 0 -5px 7px #888;
+
+    transition:
+        transform .12s,
+        filter .12s;
+}
+
+.dice:hover{
+    filter:brightness(1.08);
+}
+
+.dice:active{
+    transform:
+        translateY(3px)
+        scale(.95);
+}
+
+.dice.disabled{
+    opacity:.45;
+    cursor:not-allowed;
+}
+
+.dice.rolling{
+    animation:diceRoll .12s linear infinite;
+}
+
+@keyframes diceRoll{
+    0%{
+        transform:rotate(0deg) scale(1);
+    }
+
+    25%{
+        transform:rotate(8deg) scale(1.05);
+    }
+
+    50%{
+        transform:rotate(-8deg) scale(.95);
+    }
+
+    75%{
+        transform:rotate(6deg) scale(1.04);
+    }
+
+    100%{
+        transform:rotate(0deg) scale(1);
+    }
+}
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.message{
+    text-align:center;
+
+    min-height:23px;
+
+    margin-top:10px;
+
+    color:#dce1e6;
+
+    font-size:14px;
+
+    text-shadow:0 2px 3px #fc0b0b;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.actions{
+    display:flex;
+
+    justify-content:center;
+
+    margin-top:9px;
+}
+
+.new-game{
+    border:0;
+
+    padding:9px 20px;
+
+    border-radius:22px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #d2d2d2
+        );
+
+    color:#111;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 5px 10px #0007,
+        inset 0 1px 0 #fff;
+}
+
+/* =========================================================
+   WINNER
+========================================================= */
+
+.winner{
+    position:absolute;
+
+    inset:0;
+
+    z-index:100;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    background:#000b;
+
+    backdrop-filter:blur(4px);
+}
+
+.winner.show{
+    display:flex;
+}
+
+.winner-card{
+    width:min(85%,350px);
+
+    padding:28px 20px;
+
+    text-align:center;
+
+    border-radius:24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #303740,
+            #12151a
+        );
+
+    border:1px solid #59616b;
+
+    box-shadow:
+        0 20px 50px #000;
+
+    animation:winnerIn .35s ease;
+}
+
+@keyframes winnerIn{
+    from{
+        opacity:0;
+        transform:scale(.75);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+.winner-card h2{
+    font-size:30px;
+}
+
+.winner-card p{
+    margin-top:9px;
+    color:#cbd1d7;
+}
+
+.winner-card button{
+    margin-top:18px;
+
+    border:0;
+
+    padding:11px 24px;
+
+    border-radius:25px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:520px){
+
+    :root{
+        --board-size:96vw;
+    }
+
+    body{
+        padding:7px;
+    }
+
+    .header{
+        margin-bottom:8px;
+    }
+
+    .brand{
+        font-size:19px;
+    }
+
+    .brand span{
+        font-size:8px;
+    }
+
+    .status{
+        font-size:10px;
+        padding:7px 10px;
+    }
+
+    .board-wrap{
+        padding:5px;
+        border-radius:17px;
+    }
+
+    .board{
+        border-radius:12px;
+    }
+
+    .controls{
+        gap:10px;
+    }
+
+    .player-box{
+        min-width:115px;
+        padding:8px 10px;
+    }
+
+    .player-name{
+        font-size:15px;
+    }
+
+    .dice{
+        width:66px;
+        height:66px;
+        font-size:35px;
+        border-radius:15px;
+    }
+
+    .message{
+        font-size:12px;
+    }
+}
+
+/* =========================================================
+   SAFE CELLS - PLAYER COLORS
+========================================================= */
+
+.cell.safe-0,
+.cell.safe-47{
+    background:
+        linear-gradient(
+            145deg,
+            #ff5555,
+            #c90000
+        ) !important;
+
+    box-shadow:
+        inset 2px 2px 0 #ffffff88,
+        inset -2px -2px 0 #7d000088,
+        0 0 6px #ff222288;
+}
+
+
+.cell.safe-8,
+.cell.safe-13{
+    background:
+        linear-gradient(
+            145deg,
+            #45dc72,
+            #07943b
+        ) !important;
+
+    box-shadow:
+        inset 2px 2px 0 #ffffff88,
+        inset -2px -2px 0 #056b2b88,
+        0 0 6px #18d95788;
+}
+
+
+.cell.safe-21,
+.cell.safe-26{
+    background:
+        linear-gradient(
+            145deg,
+            #fff06a,
+            #e0ad00
+        ) !important;
+
+    box-shadow:
+        inset 2px 2px 0 #ffffff99,
+        inset -2px -2px 0 #99700088,
+        0 0 6px #ffd21c99;
+}
+
+
+.cell.safe-34,
+.cell.safe-39{
+    background:
+        linear-gradient(
+            145deg,
+            #55c7ff,
+            #087fc4
+        ) !important;
+
+    box-shadow:
+        inset 2px 2px 0 #ffffff88,
+        inset -2px -2px 0 #075c9b88,
+        0 0 6px #1594e888;
+}
+/* PLAY AGAIN - PRO LOOK */
+button[onclick="confirmNewGame()"] {
+    display: block;
+    margin: 18px auto 10px auto;
+
+    width: 180px;
+    height: 52px;
+
+    padding: 0;
+
+    border: 1px solid rgba(255,255,255,0.8);
+    border-radius: 12px;
+
+    background: linear-gradient(
+        180deg,
+        #3ee878,
+        #0aaa4f
+    );
+
+    color: #fff;
+
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 0 #067334,
+        0 8px 18px rgba(0,0,0,0.35);
+
+    transition: 0.2s ease;
+}
+
+/* Hover */
+button[onclick="confirmNewGame()"]:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 0 #067334,
+        0 12px 22px rgba(0,0,0,0.4);
+}
+
+/* Click */
+button[onclick="confirmNewGame()"]:active {
+    transform: translateY(3px);
+
+    box-shadow:
+        0 2px 0 #067334,
+        0 5px 10px rgba(0,0,0,0.3);
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    button[onclick="confirmNewGame()"] {
+        width: 155px;
+        height: 48px;
+        font-size: 15px;
+        margin-top: 16px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <!-- HEADER -->
+    <div class="header">
+
+        <div class="brand">
+            🎲 ZNOVA LUDO
+            <span>REALISTIC 3D BOARD</span>
+        </div>
+
+        <div class="status" id="status">
+            RED'S TURN
+        </div>
+
+    </div>
+
+
+    <!-- BOARD -->
+    <div class="board-wrap">
+
+        <div class="board" id="board">
+
+            <!-- GRID CREATED BY JS -->
+            <div class="grid" id="grid"></div>
+
+
+            <!-- HOMES -->
+
+            <div class="home red">
+                <div class="home-inner">
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                </div>
+            </div>
+
+
+            <div class="home green">
+                <div class="home-inner">
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                </div>
+            </div>
+
+
+            <div class="home yellow">
+                <div class="home-inner">
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                </div>
+            </div>
+
+
+            <div class="home blue">
+                <div class="home-inner">
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                    <div class="slot"></div>
+                </div>
+            </div>
+
+
+            <!-- CENTER -->
+            <div class="center"></div>
+
+
+            <!-- HOME LANES -->
+
+            <div class="lane red" id="redLane"></div>
+
+            <div class="lane green" id="greenLane"></div>
+
+            <div class="lane yellow" id="yellowLane"></div>
+
+            <div class="lane blue" id="blueLane"></div>
+
+
+            <!-- अलग-अलग रंग के SAFE STARS -->
+<div class="star red-star">★</div>
+<div class="star green-star">★</div>
+<div class="star yellow-star">★</div>
+<div class="star blue-star">★</div>
+
+
+            <!-- START ARROWS -->
+            <div class="arrow red">➜</div>
+            <div class="arrow green">⬇</div>
+            <div class="arrow yellow">⬅</div>
+            <div class="arrow blue">⬆</div>
+
+
+            <!-- WINNER -->
+            <div class="winner" id="winner">
+
+                <div class="winner-card">
+
+                    <div style="font-size:50px;">🏆</div>
+
+                    <h2 id="winnerName">
+                        Red Wins!
+                    </h2>
+
+                    <p>
+                        All four tokens reached the finish.
+                    </p>
+
+                    <button onclick="newGame()">
+                        Play Again
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CONTROLS -->
+
+    <div class="controls">
+
+        <div class="player-box">
+
+            <div class="player-label">
+                Current Player
+            </div>
+
+            <div
+                class="player-name red"
+                id="playerName">
+                RED
+            </div>
+
+        </div>
+
+
+        <button
+            class="dice"
+            id="dice">
+            ⚀
+        </button>
+
+    </div>
+
+
+    <div
+        class="message"
+        id="message">
+        Roll the dice to start
+    </div>
+
+
+    <div class="actions">
+
+      <button
+    class="new-game"
+    onclick="confirmNewGame()">
+    New Game
+</button>
+<button onclick="confirmNewGame()">
+    Play Again
+</button>
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   ZNOVA LUDO GAME ENGINE
+========================================================= */
+
+
+/* =========================================================
+   STANDARD 52-CELL CROSS PATH
+
+   Coordinates = row, column
+========================================================= */
+
+const PATH = [
+
+    [6,1],
+    [6,2],
+    [6,3],
+    [6,4],
+    [6,5],
+
+    [5,6],
+    [4,6],
+    [3,6],
+    [2,6],
+    [1,6],
+    [0,6],
+
+    [0,7],
+    [0,8],
+
+    [1,8],
+    [2,8],
+    [3,8],
+    [4,8],
+    [5,8],
+
+    [6,9],
+    [6,10],
+    [6,11],
+    [6,12],
+    [6,13],
+    [6,14],
+
+    [7,14],
+    [8,14],
+
+    [8,13],
+    [8,12],
+    [8,11],
+    [8,10],
+    [8,9],
+
+    [9,8],
+    [10,8],
+    [11,8],
+    [12,8],
+    [13,8],
+    [14,8],
+
+    [14,7],
+    [14,6],
+
+    [13,6],
+    [12,6],
+    [11,6],
+    [10,6],
+    [9,6],
+
+    [8,5],
+    [8,4],
+    [8,3],
+    [8,2],
+    [8,1],
+    [8,0],
+
+    [7,0],
+    [6,0]
+];
+
+
+/* =========================================================
+   PLAYERS
+========================================================= */
+
+const PLAYERS = [
+
+    {
+        id:0,
+        name:"RED",
+        color:"red",
+        start:0
+    },
+
+    {
+        id:1,
+        name:"GREEN",
+        color:"green",
+        start:13
+    },
+
+    {
+        id:2,
+        name:"YELLOW",
+        color:"yellow",
+        start:26
+    },
+
+    {
+        id:3,
+        name:"BLUE",
+        color:"blue",
+        start:39
+    }
+
+];
+
+
+/* =========================================================
+   GAME STATE
+========================================================= */
+
+let currentPlayer = 0;
+
+let diceValue = 0;
+
+let rolling = false;
+
+let lastRoll = 0;
+
+let gameOver = false;
+
+let tokens = [];
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const board =
+    document.getElementById("board");
+
+const grid =
+    document.getElementById("grid");
+
+const dice =
+    document.getElementById("dice");
+
+const message =
+    document.getElementById("message");
+
+const playerName =
+    document.getElementById("playerName");
+
+const status =
+    document.getElementById("status");
+
+
+/* =========================================================
+   BUILD GRID
+========================================================= */
+
+function buildGrid(){
+
+    grid.innerHTML="";
+
+    for(let r=0;r<15;r++){
+
+        for(let c=0;c<15;c++){
+
+            const cell =
+                document.createElement("div");
+
+            cell.className="cell";
+
+            const pathIndex =
+                PATH.findIndex(
+                    p =>
+                        p[0]===r &&
+                        p[1]===c
+                );
+if(pathIndex>=0){
+
+    cell.classList.add("path");
+
+    const safe = [0, 8, 13, 21, 26, 34, 39, 47];
+
+    if(safe.includes(pathIndex)){
+        cell.classList.add("safe-" + pathIndex);
+    }
+
+}
+
+            grid.appendChild(cell);
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   BUILD COLORED LANES
+========================================================= */
+
+function buildLanes(){
+
+    const lanes = [
+        ["redLane","red"],
+        ["greenLane","green"],
+        ["yellowLane","yellow"],
+        ["blueLane","blue"]
+    ];
+
+    lanes.forEach(item=>{
+
+        const container =
+            document.getElementById(item[0]);
+
+        container.innerHTML="";
+
+        for(let i=0;i<6;i++){
+
+            const cell =
+                document.createElement("div");
+
+            cell.className =
+                "lane-cell";
+
+            container.appendChild(cell);
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   CREATE TOKENS
+========================================================= */
+
+function createTokens(){
+
+    tokens=[];
+
+    PLAYERS.forEach(player=>{
+
+        for(let i=0;i<4;i++){
+
+            tokens.push({
+
+                id:
+                    player.id+
+                    "-" +
+                    i,
+
+                player:
+                    player.id,
+
+                number:i,
+
+                /* -1 means home */
+                step:-1,
+
+                finished:false
+
+            });
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   HOME TOKEN POSITION
+========================================================= */
+
+function homePosition(player,index){
+
+    const homes = {
+
+        0:[
+            [13.5,13.5],
+            [26.5,13.5],
+            [13.5,26.5],
+            [26.5,26.5]
+        ],
+
+        1:[
+            [73.5,13.5],
+            [86.5,13.5],
+            [73.5,26.5],
+            [86.5,26.5]
+        ],
+
+        2:[
+            [73.5,73.5],
+            [86.5,73.5],
+            [73.5,86.5],
+            [86.5,86.5]
+        ],
+
+        3:[
+            [13.5,73.5],
+            [26.5,73.5],
+            [13.5,86.5],
+            [26.5,86.5]
+        ]
+
+    };
+
+    return homes[player][index];
+
+}
+
+
+/* =========================================================
+   BOARD CELL TO SCREEN %
+========================================================= */
+
+function cellPosition(row,col){
+
+    return [
+
+        (col+0.5)*100/15,
+
+        (row+0.5)*100/15
+
+    ];
+
+}
+
+
+/* =========================================================
+   TOKEN SCREEN POSITION
+========================================================= */
+
+function tokenPosition(token){
+
+    /* HOME */
+    if(token.step===-1){
+
+        return homePosition(
+            token.player,
+            token.number
+        );
+
+    }
+
+
+    /* FINISH */
+    if(token.step>=57){
+
+        const finish =
+            finishPosition(
+                token.player,
+                token.number
+            );
+
+        return finish;
+
+    }
+
+
+    /* Common path */
+
+    const player =
+        PLAYERS[token.player];
+
+    const index =
+        (player.start+token.step)
+        % PATH.length;
+
+    const cell =
+        PATH[index];
+
+    return cellPosition(
+        cell[0],
+        cell[1]
+    );
+
+}
+
+
+/* =========================================================
+   FINISH POSITIONS
+========================================================= */
+
+function finishPosition(player,index){
+
+    /*
+    ==========================================
+    FINISHED TOKEN APNE HI COLOUR HOME ME JAYEGA
+    ==========================================
+    */
+
+    const finish = {
+
+        /* RED HOME */
+        0:[
+            [13.5,13.5],
+            [26.5,13.5],
+            [13.5,26.5],
+            [26.5,26.5]
+        ],
+
+        /* GREEN HOME */
+        1:[
+            [73.5,13.5],
+            [86.5,13.5],
+            [73.5,26.5],
+            [86.5,26.5]
+        ],
+
+        /* YELLOW HOME */
+        2:[
+            [73.5,73.5],
+            [86.5,73.5],
+            [73.5,86.5],
+            [86.5,86.5]
+        ],
+
+        /* BLUE HOME */
+        3:[
+            [13.5,73.5],
+            [26.5,73.5],
+            [13.5,86.5],
+            [26.5,86.5]
+        ]
+
+    };
+
+
+    return finish[player][index];
+
+}
+
+/* =========================================================
+   RENDER TOKENS
+========================================================= */
+
+function renderTokens(){
+
+    document
+        .querySelectorAll(".token")
+        .forEach(el=>el.remove());
+
+
+    /* Same common cell par aaye tokens ko group karo */
+    const groups = new Map();
+
+    tokens.forEach(token=>{
+
+        if(
+            token.step>=0 &&
+            token.step<52
+        ){
+
+            const player =
+                PLAYERS[token.player];
+
+            const globalIndex =
+                (
+                    player.start+
+                    token.step
+                ) % PATH.length;
+
+            if(!groups.has(globalIndex)){
+                groups.set(globalIndex,[]);
+            }
+
+            groups
+                .get(globalIndex)
+                .push(token);
+        }
+
+    });
+
+
+    tokens.forEach(token=>{
+
+        const player =
+            PLAYERS[token.player];
+
+        const el =
+            document.createElement("div");
+
+
+        el.className =
+            "token "+player.color;
+
+
+        el.dataset.token =
+            token.id;
+
+
+        let pos =
+            tokenPosition(token);
+
+
+        /*
+        ==========================================
+        SAFE / COMMON CELL TOKEN STACK
+        ==========================================
+        */
+
+        let globalIndex = -1;
+
+        if(
+            token.step>=0 &&
+            token.step<52
+        ){
+
+            globalIndex =
+                (
+                    player.start+
+                    token.step
+                ) % PATH.length;
+
+        }
+
+
+        const stack =
+            globalIndex>=0
+            ? groups.get(globalIndex)
+            : null;
+
+
+        if(
+            stack &&
+            stack.length>1
+        ){
+
+            const index =
+                stack.indexOf(token);
+
+            const count =
+                stack.length;
+
+
+            /*
+            2-4 tokens = 2 x 2
+            5-8 tokens = 4 x 2
+            */
+
+            const columns =
+                count<=4 ? 2 : 4;
+
+
+            const rows =
+                Math.ceil(
+                    count/columns
+                );
+
+
+            const spacing =
+                count<=4
+                ? 2.8
+                : 2.0;
+
+
+            const col =
+                index%columns;
+
+
+            const row =
+                Math.floor(
+                    index/columns
+                );
+
+
+            const offsetX =
+                (
+                    col-
+                    (columns-1)/2
+                )*spacing;
+
+
+            const offsetY =
+                (
+                    row-
+                    (rows-1)/2
+                )*spacing;
+
+
+            pos=[
+                pos[0]+offsetX,
+                pos[1]+offsetY
+            ];
+
+
+            /*
+            Safe/common cell par
+            sabhi tokens chhote
+            */
+
+            const scale =
+                count<=4
+                ? .72
+                : count<=8
+                ? .58
+                : .50;
+
+
+            el.style.transform =
+                `translate(-50%,-50%) scale(${scale})`;
+
+
+            el.style.zIndex =
+                50+index;
+
+        }
+
+
+        /*
+        ==========================================
+        SINGLE TOKEN
+        ==========================================
+        */
+
+        else{
+
+            el.style.zIndex=45;
+
+        }
+
+
+        el.style.left =
+            pos[0]+"%";
+
+
+        el.style.top =
+            pos[1]+"%";
+
+
+        /*
+        ==========================================
+        SELECTABLE TOKEN
+        ==========================================
+        */
+
+        if(
+
+            !gameOver &&
+
+            token.player===
+            currentPlayer &&
+
+            diceValue>0 &&
+
+            canMove(token)
+
+        ){
+
+            el.classList.add(
+                "selectable"
+            );
+
+        }
+
+
+        el.addEventListener(
+            "click",
+            ()=>{
+                selectToken(token.id);
+            }
+        );
+
+
+        board.appendChild(el);
+
+    });
+
+}
+
+/* =========================================================
+   CAN MOVE
+========================================================= */
+
+function canMove(token){
+
+    if(token.finished){
+
+        return false;
+
+    }
+
+
+    /* Home token requires 6 */
+
+    if(token.step===-1){
+
+        return diceValue===6;
+
+    }
+
+
+    /* 57 = final finish */
+
+    return (
+        token.step+diceValue
+        <=57
+    );
+
+}
+
+
+/* =========================================================
+   SELECT TOKEN
+========================================================= */
+
+function selectToken(id){
+
+    if(
+        rolling ||
+        gameOver ||
+        diceValue===0
+    ){
+
+        return;
+
+    }
+
+
+    const token =
+        tokens.find(
+            t=>t.id===id
+        );
+
+
+    if(!token){
+
+        return;
+
+    }
+
+
+    if(
+        token.player !==
+        currentPlayer
+    ){
+
+        return;
+
+    }
+
+
+    if(
+        !canMove(token)
+    ){
+
+        message.textContent =
+            "This token cannot move.";
+
+        return;
+
+    }
+
+
+    moveToken(token);
+
+}
+
+
+/* =========================================================
+   MOVE TOKEN
+========================================================= */
+
+async function moveToken(token){
+
+    const steps =
+        token.step===-1
+        ? 1
+        : diceValue;
+
+
+    const oldStep =
+        token.step;
+
+
+    /* Bring out from home */
+
+    if(oldStep===-1){
+
+        token.step=0;
+
+        renderTokens();
+
+        await wait(250);
+
+    }
+
+    else{
+
+        for(
+            let i=0;
+            i<steps;
+            i++
+        ){
+
+            token.step++;
+
+            renderTokens();
+
+            playMoveSound();
+
+            await wait(130);
+
+        }
+
+    }
+
+
+    /* Finished */
+
+   if(token.step>=57){
+
+    token.step=57;
+
+    token.finished=true;
+
+    renderTokens();
+
+    message.textContent =
+        PLAYERS[currentPlayer].name+
+        " token reached its HOME!";
+
+}
+
+
+    /* Capture */
+
+    capture(token);
+
+    renderTokens();
+
+
+    const winner =
+        checkWinner(
+            currentPlayer
+        );
+
+
+    if(winner){
+
+        showWinner();
+
+        return;
+
+    }
+
+
+    const rolledSix =
+        lastRoll===6;
+
+
+    diceValue=0;
+
+    dice.textContent="⚀";
+
+    dice.classList.remove(
+        "disabled"
+    );
+
+
+    if(rolledSix){
+
+        message.textContent =
+            PLAYERS[currentPlayer].name+
+            " gets another turn!";
+
+        renderTokens();
+
+        return;
+
+    }
+
+
+    nextPlayer();
+
+}
+
+
+/* =========================================================
+   CAPTURE
+========================================================= */
+
+function capture(movingToken){
+
+    if(
+        movingToken.step<0 ||
+        movingToken.step>=57
+    ){
+
+        return;
+
+    }
+
+
+    const player =
+        PLAYERS[movingToken.player];
+
+
+    const globalIndex =
+        (
+            player.start+
+            movingToken.step
+        )
+        %PATH.length;
+
+
+    /* safe positions */
+
+    const safe =
+        [0, 8, 13, 21, 26, 34, 39, 47];
+
+
+    if(
+        safe.includes(
+            globalIndex
+        )
+    ){
+
+        return;
+
+    }
+
+
+    tokens.forEach(other=>{
+
+        if(
+            other.id===
+            movingToken.id
+        ){
+
+            return;
+
+        }
+
+
+        if(
+            other.player===
+            movingToken.player
+        ){
+
+            return;
+
+        }
+
+
+        if(
+            other.step<0 ||
+            other.step>=57
+        ){
+
+            return;
+
+        }
+
+
+        const otherGlobal =
+            (
+                PLAYERS[
+                    other.player
+                ].start+
+                other.step
+            )
+            %PATH.length;
+
+
+        if(
+            otherGlobal===
+            globalIndex
+        ){
+
+            other.step=-1;
+
+            other.finished=false;
+
+
+            message.textContent =
+                player.name+
+                " captured "+
+                PLAYERS[
+                    other.player
+                ].name+
+                " token!";
+
+            playCaptureSound();
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   CHECK WINNER
+========================================================= */
+
+function checkWinner(player){
+
+    const count =
+        tokens.filter(
+            token =>
+                token.player===
+                player &&
+                token.finished
+        ).length;
+
+
+    return count===4;
+
+}
+
+
+/* =========================================================
+   NEXT PLAYER
+========================================================= */
+
+function nextPlayer(){
+
+    currentPlayer =
+        (
+            currentPlayer+1
+        )
+        %PLAYERS.length;
+
+
+    updatePlayerUI();
+
+    renderTokens();
+
+}
+
+
+/* =========================================================
+   UPDATE UI
+========================================================= */
+
+function updatePlayerUI(){
+
+    const player =
+        PLAYERS[currentPlayer];
+
+
+    playerName.textContent =
+        player.name;
+
+    playerName.className =
+        "player-name "+
+        player.color;
+
+
+    status.textContent =
+        player.name+
+        "'S TURN";
+
+}
+
+
+/* =========================================================
+   DICE
+========================================================= */
+
+const diceFaces = [
+
+    "⚀",
+    "⚁",
+    "⚂",
+    "⚃",
+    "⚄",
+    "⚅"
+
+];
+
+
+dice.addEventListener(
+    "click",
+    rollDice
+);
+
+
+function rollDice(){
+
+    if(
+        rolling ||
+        gameOver ||
+        diceValue!==0
+    ){
+
+        return;
+
+    }
+
+
+    rolling=true;
+
+    dice.classList.add(
+        "disabled",
+        "rolling"
+    );
+
+
+    playDiceSound();
+
+
+    let count=0;
+
+
+    const animation =
+        setInterval(()=>{
+
+            const random =
+                Math.floor(
+                    Math.random()*6
+                );
+
+
+            dice.textContent =
+                diceFaces[random];
+
+
+            count++;
+
+
+            if(count>=10){
+
+                clearInterval(
+                    animation
+                );
+
+
+                const result =
+                    Math.floor(
+                        Math.random()*6
+                    )+1;
+
+
+                lastRoll=result;
+
+                diceValue=result;
+
+
+                dice.textContent =
+                    diceFaces[
+                        result-1
+                    ];
+
+
+                dice.classList.remove(
+                    "rolling"
+                );
+
+
+                rolling=false;
+
+
+                const movable =
+                    tokens.some(
+                        token =>
+                            token.player===
+                            currentPlayer &&
+                            canMove(token)
+                    );
+
+
+                if(!movable){
+
+                    message.textContent =
+                        PLAYERS[
+                            currentPlayer
+                        ].name+
+                        " has no valid move.";
+
+
+                    diceValue=0;
+
+
+                    dice.classList.remove(
+                        "disabled"
+                    );
+
+
+                    if(result!==6){
+
+                        setTimeout(
+                            nextPlayer,
+                            700
+                        );
+
+                    }
+
+                    return;
+
+                }
+
+
+                message.textContent =
+                    PLAYERS[
+                        currentPlayer
+                    ].name+
+                    " rolled "+
+                    result+
+                    ". Select a token.";
+
+
+                renderTokens();
+
+            }
+
+        },70);
+
+}
+
+function confirmNewGame(){
+
+    const answer = confirm(
+        "⚠️ WARNING\n\n" +
+        "Kya aap current game ko reset karke New Game start karna chahte hain?\n\n" +
+        "Current game progress khatam ho jayega."
+    );
+
+    if(answer){
+
+        newGame();
+
+    }
+
+}
+/* =========================================================
+   NEW GAME
+========================================================= */
+
+function newGame(){
+
+    currentPlayer=0;
+
+    diceValue=0;
+
+    lastRoll=0;
+
+    rolling=false;
+
+    gameOver=false;
+
+
+    dice.textContent="⚀";
+
+    dice.classList.remove(
+        "disabled",
+        "rolling"
+    );
+
+
+    document
+        .getElementById("winner")
+        .classList.remove(
+            "show"
+        );
+
+
+    createTokens();
+
+    updatePlayerUI();
+
+    renderTokens();
+
+
+    message.textContent =
+        "Roll the dice to start.";
+
+}
+
+
+/* =========================================================
+   WINNER SCREEN
+========================================================= */
+
+function showWinner(){
+
+    gameOver=true;
+
+    const player =
+        PLAYERS[currentPlayer];
+
+
+    document
+        .getElementById("winnerName")
+        .textContent =
+        player.name+
+        " WINS!";
+
+
+    document
+        .getElementById("winner")
+        .classList.add(
+            "show"
+        );
+
+
+    dice.classList.add(
+        "disabled"
+    );
+
+}
+
+
+/* =========================================================
+   WAIT
+========================================================= */
+
+function wait(ms){
+
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                ms
+            )
+    );
+
+}
+
+
+/* =========================================================
+   SOUND SYSTEM
+   Browser audio context
+========================================================= */
+
+let audioContext=null;
+
+
+function getAudio(){
+
+    if(!audioContext){
+
+        audioContext =
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+    }
+
+    return audioContext;
+
+}
+
+
+function beep(
+    frequency,
+    duration,
+    type="sine"
+){
+
+    try{
+
+        const ctx =
+            getAudio();
+
+
+        const oscillator =
+            ctx.createOscillator();
+
+        const gain =
+            ctx.createGain();
+
+
+        oscillator.type=type;
+
+        oscillator.frequency.value =
+            frequency;
+
+
+        gain.gain.setValueAtTime(
+            .0001,
+            ctx.currentTime
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+            .08,
+            ctx.currentTime+.01
+        );
+
+
+        gain.gain.exponentialRampToValueAtTime(
+            .0001,
+            ctx.currentTime+duration
+        );
+
+
+        oscillator.connect(gain);
+
+        gain.connect(
+            ctx.destination
+        );
+
+
+        oscillator.start();
+
+        oscillator.stop(
+            ctx.currentTime+
+            duration
+        );
+
+    }catch(e){}
+
+}
+
+
+function playDiceSound(){
+
+    beep(500,.035,"sine");
+
+    setTimeout(
+        ()=>beep(420,.06,"square"),
+        70
+    );
+
+}
+
+
+function playMoveSound(){
+
+    beep(500,.035,"sine");
+
+}
+
+
+function playCaptureSound(){
+
+    beep(180,.08,"sawtooth");
+
+    setTimeout(
+        ()=>beep(100,.12,"sawtooth"),
+        80
+    );
+
+}
+
+
+/* =========================================================
+   START GAME
+========================================================= */
+
+buildGrid();
+
+buildLanes();
+
+newGame();
+
+</script>
+
+</body>
+</html>
